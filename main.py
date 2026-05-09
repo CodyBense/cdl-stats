@@ -36,6 +36,12 @@ def get_player_hp_kd(tag: str, player_dict: dict) -> float:
              return player['hp_kd']
 
 
+def get_player_hp_k_10m(tag: str, player_dict: dict) -> float:
+    for player in player_dict['result']['data']['json']:
+        if player['player_tag'].lower() == tag.lower():
+             return player['hp_k_10m']
+
+
 def get_player_snd_kd(tag: str, player_dict: dict) -> float:
     for player in player_dict['result']['data']['json']:
         if player['player_tag'].lower() == tag.lower():
@@ -46,6 +52,12 @@ def get_player_ovl_kd(tag: str, player_dict: dict) -> float:
     for player in player_dict['result']['data']['json']:
         if player['player_tag'].lower() == tag.lower():
              return player['ovl_kd']
+
+
+def get_player_ovl_k_10m(tag: str, player_dict: dict) -> float:
+    for player in player_dict['result']['data']['json']:
+        if player['player_tag'].lower() == tag.lower():
+             return player['ovl_k_10m']
 
 
 def main():
