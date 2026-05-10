@@ -1,4 +1,5 @@
 .env
+.postgres
 
 # Python-generated files
 __pycache__/
