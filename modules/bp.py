@@ -11,9 +11,8 @@ def get_all_player_stats() -> dict:
     return player_stats_dict
 
 
-def get_player_tags(player_dict: dict) -> str:
-    for player in player_dict['result']['data']['json']:
-        return player['player_tag']
+def get_player_tags(player_dict: dict) -> list:
+    return [player['player_tag'] for player in player_dict['result']['data']['json']]
 
 
 def get_player_stats(tag: str, player_dict: dict) -> dict:
