@@ -1,8 +1,6 @@
 {
   description = "Dev shell for cdl-stats with a postgres db";
-
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
   outputs =
     { self, nixpkgs }:
     let
@@ -12,43 +10,37 @@
     {
       devShells.${system}.default = pkgs.mkShell {
         packages = [ pkgs.postgresql ];
-
         shellHook = ''
-            export PGDATA=$PWD/.postgres/data
-            export PGHOST=$PWD/.postgres
-            export PGPORT=5432
-            export PGDATABASE=cdl_stats
+                    export PGDATA=$PWD/.postgres/data
+                    export PGHOST=$PWD/.postgres
+                    export PGPORT=5432
+                    export PGDATABASE=cdl_stats
 
-            if [ ! -d "$PGDATA" ]; then
-                echo "Initializing PostgresSQL..."
-                initdb --no-locale --encoding=UTF8
+                    if [ ! -d "$PGDATA" ]; then
+                      echo "Initializing PostgreSQL..."
+                      initdb --no-locale --encoding=UTF8
+                      pg_ctl start -l "$PWD/.postgres/postgres.log" -o "-k $PGHOST"
+                      createdb cdl_stats
+                      psql -d cdl_stats <<SQL
+          CREATE TABLE players (
+            tag VARCHAR PRIMARY KEY,
+            kd REAL NOT NULL,
+            hp_kd REAL NOT NULL,
+            hp_k_10m REAL NOT NULL,
+            snd_kd REAL NOT NULL,
+            ovl_kd REAL NOT NULL,
+            ovl_k_10m REAL NOT NULL,
+            created_at TIMESTAMPTZ DEFAULT NOW()
+          );
+          SQL
+                    else
+                      pg_ctl start -l "$PWD/.postgres/postgres.log" -o "-k $PGHOST"
+                    fi
 
-                pg_ctl start -l "$PWD/.postgres/postgres.log" -o "0k $PGHOST"
-
-                createdb cdl_stats
-
-                psql -d cdl_stats  <<SQL
-                CREATE TABLE players (
-                  tag VARCHAR PRIMARY KEY,
-                  kd REAL NOT NULL,
-                  hp_kd REAL NOT NULL,
-                  hp_k_10m REAL NOT NULL,
-                  snd_kd REAL NOT NULL,
-                  ovl_kd REAL NOT NULL,
-                  ovl_k_10m REAL NOT NULL
-                  created_at TIMESTAMPTZ DEFAULT NOW()
-                );
-
-              SQL
-              else
-              pg_ctl start -l "$PWD/.postgres/postgres.log" -o "-k $PGHOST"
-          fi
-
-          stop_postgres() {
-          pg_ctl stop
-          }
-
-          trap stop_postgres EXIT
+                    stop_postgres() {
+                      pg_ctl stop
+                    }
+                    trap stop_postgres EXIT
         '';
       };
     };
