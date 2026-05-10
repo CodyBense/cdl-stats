@@ -1,14 +1,7 @@
 {
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+  description = "Dev shell for cdl-stats with a postgres db";
 
-{
-  Description = "Dev shell for cdl-stats with a postgres db";
-
-  inputs.nixpkgs.url = "github:NixOS/pkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs =
     { self, nixpkgs }:
