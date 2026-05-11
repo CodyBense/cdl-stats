@@ -54,6 +54,13 @@ def select_player(conn, tag: str) -> dict:
     }
 
 
+# UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+def update_all_stats(conn, tag: str, kd: float, hp_kd: float, hp_k_10m: float, snd_kd: float, ovl_kd: float, ovl_k_10m: float) -> None:
+    cur = conn.cursor()
+    cur.execute(f"UPDATE players SET kd = %s, hp_kd = %s, hp_k_10m = %s, snd_kd = %s, ovl_kd = %s, ovl_k_10m = %s WHERE tag = %s;", (round(kd,2) , round(hp_kd,2) , round(hp_k_10m,2) , round(snd_kd,2) , round(ovl_kd,2) , round(ovl_k_10m,2), tag))
+    conn.commit()
+
+
 # Other data funcs
 def print_stats(player_stats: dict) -> None:
     print(f"Tag: {player_stats['tag']}\nKD: {player_stats['kd']}\nHP KD: {player_stats['hp_kd']}\nHP K 10m: {player_stats['hp_k_10m']}\nSND KD: {player_stats['snd_kd']}\nOVL KD: {player_stats['ovl_kd']}\nOVL K 10m: {player_stats['ovl_k_10m']}")
