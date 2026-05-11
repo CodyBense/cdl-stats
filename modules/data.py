@@ -6,7 +6,8 @@ from dotenv import load_dotenv, dotenv_values
 load_dotenv()
 
 
-def connect():
+# SQL Funcs
+def connect() -> None:
     conn = psycopg2.connect(
         dbname=os.getenv("DBNAME"),
         user=os.getenv("DBUSER"),
@@ -32,7 +33,27 @@ def init_data(conn, player_dict: dict) -> None:
         insert_player(conn, player['player_tag'], player['kd'], player['hp_kd'], player['hp_k_10m'], player['snd_kd'], player['ovl_kd'], player['ovl_k_10m'])
 
 
-def select_all(conn):
+def select_all(conn) -> None:
     cur = conn.cursor()
     cur.execute("SELECT * FROM players;")
     return cur.fetchall()
+
+
+def select_player(conn, tag: str) -> dict:
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM players WHERE tag='{tag}';")
+    stats = cur.fetchone()
+    return {
+        "tag": stats[0],
+        "kd": stats[1],
+        "hp_kd": stats[2],
+        "hp_k_10m": stats[3],
+        "snd_kd": stats[4],
+        "ovl_kd": stats[5],
+        "ovl_k_10m": stats[6],
+    }
+
+
+# Other data funcs
+def print_stats(player_stats: dict) -> None:
+    print(f"Tag: {player_stats['tag']}\nKD: {player_stats['kd']}\nHP KD: {player_stats['hp_kd']}\nHP K 10m: {player_stats['hp_k_10m']}\nSND KD: {player_stats['snd_kd']}\nOVL KD: {player_stats['ovl_kd']}\nOVL K 10m: {player_stats['ovl_k_10m']}")
