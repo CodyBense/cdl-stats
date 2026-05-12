@@ -9,7 +9,10 @@
     in
     {
       devShells.${system}.default = pkgs.mkShell {
-        packages = [ pkgs.postgresql ];
+        packages = with pkgs; [
+          postgresql
+          cobra-cli
+        ];
         shellHook = ''
                     export PGDATA=$PWD/.postgres/data
                     export PGHOST=$PWD/.postgres
