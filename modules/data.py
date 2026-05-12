@@ -61,40 +61,76 @@ def update_all_stats(conn, tag: str, kd: float, hp_kd: float, hp_k_10m: float, s
     conn.commit()
 
 
-def update_kd(conn, tag: str, kd: float) -> None:
+def set_kd(conn, tag: str, kd: float) -> None:
     cur = conn.cursor()
     cur.execute(f"UPDATE players SET kd = %s WHERE tag = %s;", (round(kd,2), tag))
     conn.commit()
 
 
-def update_hp_kd(conn, tag: str, hp_kd: float) -> None:
+def set_hp_kd(conn, tag: str, hp_kd: float) -> None:
     cur = conn.cursor()
     cur.execute(f"UPDATE players SET hp_kd = %s WHERE tag = %s;", (round(hp_kd,2), tag))
     conn.commit()
 
 
-def update_hp_k_10m(conn, tag: str, hp_k_10m: float) -> None:
+def set_hp_k_10m(conn, tag: str, hp_k_10m: float) -> None:
     cur = conn.cursor()
     cur.execute(f"UPDATE players SET hp_k_10m = %s WHERE tag = %s;", (round(hp_k_10m,2), tag))
     conn.commit()
 
 
-def update_snd_kd(conn, tag: str, snd_kd: float) -> None:
+def set_snd_kd(conn, tag: str, snd_kd: float) -> None:
     cur = conn.cursor()
     cur.execute(f"UPDATE players SET snd_kd = %s WHERE tag = %s;", (round(snd_kd,2), tag))
     conn.commit()
 
 
-def update_ovl_kd(conn, tag: str, ovl_kd: float) -> None:
+def set_ovl_kd(conn, tag: str, ovl_kd: float) -> None:
     cur = conn.cursor()
     cur.execute(f"UPDATE players SET ovl_kd = %s WHERE tag = %s;", (round(ovl_kd,2), tag))
     conn.commit()
 
 
-def update_ovl_k_10m(conn, tag: str, ovl_k_10m: float) -> None:
+def set_ovl_k_10m(conn, tag: str, ovl_k_10m: float) -> None:
     cur = conn.cursor()
     cur.execute(f"UPDATE players SET ovl_k_10m = %s WHERE tag = %s;", (round(ovl_k_10m,2), tag))
     conn.commit()
+
+
+def get_kd(conn, tag: str) -> float:
+    cur = conn.cursor()
+    cur.execute(f"SELECT kd FROM players WHERE tag = %s;", (tag,))
+    return cur.fetchone()[0]
+
+
+def get_hp_kd(conn, tag: str) -> float:
+    cur = conn.cursor()
+    cur.execute(f"SELECT hp_kd FROM players WHERE tag = %s;", (tag,))
+    return cur.fetchone()[0]
+
+
+def get_hp_k_10m(conn, tag: str) -> float:
+    cur = conn.cursor()
+    cur.execute(f"SELECT hp_k_10m FROM players WHERE tag = %s;", (tag,))
+    return cur.fetchone()[0]
+
+
+def get_snd_kd(conn, tag: str) -> float:
+    cur = conn.cursor()
+    cur.execute(f"SELECT snd_kd FROM players WHERE tag = %s;", (tag,))
+    return cur.fetchone()[0]
+
+
+def get_ovl_kd(conn, tag: str) -> float:
+    cur = conn.cursor()
+    cur.execute(f"SELECT ovl_kd FROM players WHERE tag = %s;", (tag,))
+    return cur.fetchone()[0]
+
+
+def get_ovl_k_10m(conn, tag: str) -> float:
+    cur = conn.cursor()
+    cur.execute(f"SELECT ovl_k_10m FROM players WHERE tag = %s;", (tag,))
+    return cur.fetchone()[0]
 
 
 # Other data funcs
