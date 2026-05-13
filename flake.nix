@@ -14,6 +14,7 @@
           cobra-cli
         ];
         shellHook = ''
+          export LD_LIBRARY_PATH="${pkgs.zlib}/lib:$LD_LIBRARY_PATH"
                     export PGDATA=$PWD/.postgres/data
                     export PGHOST=$PWD/.postgres
                     export PGPORT=5432
