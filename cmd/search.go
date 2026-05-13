@@ -16,8 +16,29 @@ var searchCmd = &cobra.Command{
 	Short: "Search for a player's stats",
 	Long:  `Search for either all the stats of a player or individual stats.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("search called")
-		pyCmd := exec.Command("python3", "-c", "from", "modules", "import", "data;", fmt.Sprintf("data.select_player(%s)", args[0]))
+		statFlag, err := cmd.Flags().GetString("stat")
+		if err != nil {
+			return
+		}
+
+		if statFlag != "" {
+			pyScript := fmt.Sprintf("from modules import data; data.print_stat(data.get_stat('%s','%s'))", args[0], statFlag)
+			pyCmd := exec.Command("python3", "-c", pyScript)
+			pyCmd.Dir = "/home/cody/workspaces/github/CodyBense/cdl-stats"
+
+			out, err := pyCmd.CombinedOutput()
+			if err != nil {
+				fmt.Println("Error executing Python code:", err)
+				return
+			}
+			fmt.Println(string(out))
+			return
+		}
+
+		pyScript := fmt.Sprintf("from modules import data; data.print_stats(data.select_player('%s'))", args[0])
+		pyCmd := exec.Command("python3", "-c", pyScript)
+		pyCmd.Dir = "/home/cody/workspaces/github/CodyBense/cdl-stats"
+
 		out, err := pyCmd.CombinedOutput()
 		if err != nil {
 			fmt.Println("Error executing Python code:", err)
@@ -39,4 +60,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// searchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	searchCmd.Flags().StringP("stat", "s", "", "Search a specific stat")
 }
