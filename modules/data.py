@@ -34,6 +34,14 @@ def init_data(player_dict: dict) -> None:
         insert_player(conn, player['player_tag'], player['kd'], player['hp_kd'], player['hp_k_10m'], player['snd_kd'], player['ovl_kd'], player['ovl_k_10m'])
 
 
+def update_data(player_dict: dict) -> None:
+    conn = connect()
+    for player in player_dict['result']['data']['json']:
+        update_all_stats(player['player_tag'], player['kd'], player['hp_kd'], player['hp_k_10m'], player['snd_kd'], player['ovl_kd'], player['ovl_k_10m'])
+    conn.commit()
+
+
+
 def select_all() -> None:
     conn = connect()
     cur = conn.cursor()
