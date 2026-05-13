@@ -107,6 +107,14 @@ def set_ovl_k_10m(tag: str, ovl_k_10m: float) -> None:
     conn.commit()
 
 
+def get_stat(tag:str, stat: str) -> dict:
+    conn = connect()
+    cur = conn.cursor()
+    cur.execute(f"SELECT {stat} FROM players WHERE tag = %s;", (tag,))
+    return {f"{stat}": cur.fetchone()[0]}
+
+
+
 def get_kd(tag: str) -> dict:
     conn = connect()
     cur = conn.cursor()
