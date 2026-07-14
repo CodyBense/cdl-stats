@@ -354,7 +354,7 @@ pub mod stats {
     pub fn print_players_stats(tag: String, players_stats: &PlayersStats) {
         for player in players_stats.result.data.json.iter() {
             if tag == player.player_tag {
-                println!("{}'s stats: {:?}", tag, player);
+                println!("{:?}", player);
             }
         }
     }
