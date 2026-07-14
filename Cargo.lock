@@ -118,7 +118,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cdl-stats-v2"
+name = "cdl-stats"
 version = "0.1.0"
 dependencies = [
  "clap",
