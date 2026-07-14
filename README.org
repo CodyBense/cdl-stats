@@ -1,0 +1,4 @@
+#+title: Readme
+
+* CDL STATS
+The purpose of this program is to pull stats from [[https://breakingpoint.gg/][Breaking Point]] for CDL matches, players, etc.
