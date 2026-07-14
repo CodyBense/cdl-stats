@@ -2,3 +2,12 @@
 
 * CDL STATS
 The purpose of this program is to pull stats from [[https://breakingpoint.gg/][Breaking Point]] for CDL matches, players, etc.
+
+* USAGE
+#+begin_src bash
+# Prints all the sats for a player
+cdl-stats --tag <tag>
+
+# Prints a certain stat for a player
+cdl-stats --tag <tag> --stat <stat>
+#+end_src
