@@ -174,7 +174,7 @@ pub mod stats {
         }
     }
 
-    impl Default for Json {
+    impl Json {
         fn default() -> Self {
             Json {
                 hp_map_wins: 0,
