@@ -186,61 +186,77 @@ pub mod stats {
     impl fmt::Display for Json {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
             writeln!(f, "{}", self.player_tag)?;
-        writeln!(f, "{}", "-".repeat(self.player_tag.len()))?;
+            writeln!(f, "{}", "-".repeat(self.player_tag.len()))?;
 
-        writeln!(f, "\nGeneral")?;
-        print_section(f, &[
-            ("Matches Played", self.matches_played.to_string()),
-            ("Match Wins", self.match_wins.to_string()),
-            ("Map Wins", self.map_wins.to_string()),
-            ("Kills", self.kills.to_string()),
-            ("Deaths", self.deaths.to_string()),
-            ("KD", format!("{:.2}", self.kd)),
-            ("Assists", self.assists.to_string()),
-            ("Damage", self.damage.to_string()),
-            ("Dmg/Min", format!("{:.2}", self.dmg_per_min)),
-            ("BP Rating", format!("{:.2}", self.bp_rating)),
-            ("Slayer Rating", format!("{:.2}", self.slayer_rating)),
-        ])?;
+            writeln!(f, "\nGeneral")?;
+            print_section(
+                f,
+                &[
+                    ("Matches Played", self.matches_played.to_string()),
+                    ("Match Wins", self.match_wins.to_string()),
+                    ("Map Wins", self.map_wins.to_string()),
+                    ("Kills", self.kills.to_string()),
+                    ("Deaths", self.deaths.to_string()),
+                    ("KD", format!("{:.2}", self.kd)),
+                    ("Assists", self.assists.to_string()),
+                    ("Damage", self.damage.to_string()),
+                    ("Dmg/Min", format!("{:.2}", self.dmg_per_min)),
+                    ("BP Rating", format!("{:.2}", self.bp_rating)),
+                    ("Slayer Rating", format!("{:.2}", self.slayer_rating)),
+                ],
+            )?;
 
-        writeln!(f, "\nHardpoint")?;
-        print_section(f, &[
-            ("Games", self.hp_game_count.to_string()),
-            ("KD", format!("{:.2}", self.hp_kd)),
-            ("K/10m", format!("{:.2}", self.hp_k_10m)),
-            ("Kills", self.hp_kills.to_string()),
-            ("Deaths", self.hp_deaths.to_string()),
-            ("Damage", self.hp_damage.to_string()),
-            ("BP Rating", format!("{:.2}", self.hp_bp_rating)),
-        ])?;
+            writeln!(f, "\nHardpoint")?;
+            print_section(
+                f,
+                &[
+                    ("Games", self.hp_game_count.to_string()),
+                    ("KD", format!("{:.2}", self.hp_kd)),
+                    ("K/10m", format!("{:.2}", self.hp_k_10m)),
+                    ("Kills", self.hp_kills.to_string()),
+                    ("Deaths", self.hp_deaths.to_string()),
+                    ("Damage", self.hp_damage.to_string()),
+                    ("BP Rating", format!("{:.2}", self.hp_bp_rating)),
+                ],
+            )?;
 
-        writeln!(f, "\nSearch & Destroy")?;
-        print_section(f, &[
-            ("Rounds", self.snd_rounds.to_string()),
-            ("KD", format!("{:.2}", self.snd_kd)),
-            ("KPR", format!("{:.2}", self.snd_kpr)),
-            ("Kills", self.snd_kills.to_string()),
-            ("Plants/Defuses", self.snd_plants_defuses.to_string()),
-            ("BP Rating", format!("{:.2}", self.snd_bp_rating)),
-        ])?;
+            writeln!(f, "\nSearch & Destroy")?;
+            print_section(
+                f,
+                &[
+                    ("Rounds", self.snd_rounds.to_string()),
+                    ("KD", format!("{:.2}", self.snd_kd)),
+                    ("KPR", format!("{:.2}", self.snd_kpr)),
+                    ("Kills", self.snd_kills.to_string()),
+                    ("Plants/Defuses", self.snd_plants_defuses.to_string()),
+                    ("BP Rating", format!("{:.2}", self.snd_bp_rating)),
+                ],
+            )?;
 
-        writeln!(f, "\nControl")?;
-        print_section(f, &[
-            ("Games", self.ctl_game_count.to_string()),
-            ("KD", self.ctl_kd.to_string()),
-            ("Kills", self.ctl_kills.to_string()),
-        ])?;
+            writeln!(f, "\nControl")?;
+            print_section(
+                f,
+                &[
+                    ("Games", self.ctl_game_count.to_string()),
+                    ("KD", self.ctl_kd.to_string()),
+                    ("Kills", self.ctl_kills.to_string()),
+                ],
+            )?;
 
-        writeln!(f, "\nOverload")?;
-        print_section(f, &[
-            ("Games", self.ovl_game_count.to_string()),
-            ("KD", format!("{:.2}", self.ovl_kd)),
-            ("K/10m", format!("{:.2}", self.ovl_k_10m)),
-            ("Kills", self.ovl_kills.to_string()),
-            ("Overloads", self.ovl_overloads.to_string()),
-        ])?;
+            writeln!(f, "\nOverload")?;
+            print_section(
+                f,
+                &[
+                    ("Games", self.ovl_game_count.to_string()),
+                    ("KD", format!("{:.2}", self.ovl_kd)),
+                    ("K/10m", format!("{:.2}", self.ovl_k_10m)),
+                    ("Kills", self.ovl_kills.to_string()),
+                    ("Overloads", self.ovl_overloads.to_string()),
+                ],
+            )?;
 
-        Ok(())}
+            Ok(())
+        }
     }
 
     pub async fn get_all_player_stats() -> core::result::Result<String, Error> {
@@ -254,43 +270,6 @@ pub mod stats {
     ) -> core::result::Result<PlayersStats, serde_json::Error> {
         let player_stats: PlayersStats = serde_json::from_str(&stats)?;
 
-        Ok(player_stats)
-    }
-
-    pub fn print_player_tags(players_stats: &PlayersStats) {
-        for player in players_stats.result.data.json.iter() {
-            println!("Player tag: {}", player.player_tag);
-        }
-    }
-
-    pub fn get_player_tags(players_stats: &PlayersStats) -> Vec<String> {
-        let mut tags: Vec<String> = Vec::new();
-
-        for player in players_stats.result.data.json.iter() {
-            tags.push(player.player_tag.clone());
-        }
-
-        tags
-    }
-
-    pub fn print_players_stats(tag: String, players_stats: &PlayersStats) {
-        for player in players_stats.result.data.json.iter() {
-            if tag == player.player_tag {
-                println!("{:?}", player);
-            }
-        }
-    }
-
-    pub fn get_players_stats(
-        tag: String,
-        players_stats: &PlayersStats,
-    ) -> std::result::Result<Json, Error> {
-        let mut player_stats = Json::default();
-        for player in players_stats.result.data.json.iter() {
-            if tag == player.player_tag {
-                player_stats = player.clone();
-            }
-        }
         Ok(player_stats)
     }
 
@@ -309,16 +288,5 @@ pub mod stats {
         F: Fn(&Json) -> T,
     {
         stats_by_tag.get(tag).map(|player| extract(player))
-    }
-
-    pub fn get_kd(tag: String, players_stats: &PlayersStats) -> std::result::Result<f64, Error> {
-        let mut kd: f64 = 0.0;
-        for player in players_stats.result.data.json.iter() {
-            if tag == player.player_tag {
-                kd = player.kd;
-            }
-        }
-
-        Ok(kd)
     }
 }
