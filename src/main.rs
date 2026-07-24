@@ -7,10 +7,16 @@ mod bp;
 struct Args {
     #[arg(short, long)]
     tag: String,
-    // #[arg(short, long, default_value_t = 1)]
-    // count: u8,
     #[arg(short, long, default_value_t = String::from("all"))]
     stat: String,
+}
+
+fn print_header(tag: &String) {
+    println!("{}", tag);
+    for _ in 0..tag.len() {
+        print!("-");
+    }
+    println!();
 }
 
 #[tokio::main]
@@ -30,45 +36,50 @@ async fn main() {
         Err(e) => eprintln!("Conversion failed: {}", e),
     }
 
-    println!("{}", args.tag);
-    for _ in 0..args.tag.len() {
-        print!("-");
-    }
-    println!();
+    let by_tag = bp::stats::stats_by_tag(&players_stats);
     match args.stat.as_str() {
-        "kd" => println!(
-            "kd: {:?}",
-            bp::stats::get_kd(args.tag, &players_stats).unwrap()
-        ),
-        "hp_kd" => println!(
-            "hp kd: {:?}",
-            bp::stats::get_hp_kd(args.tag, &players_stats).unwrap()
-        ),
-        "hp_k_10m" => println!(
-            "hp k 10m: {:?}",
-            bp::stats::get_hp_k_10m(args.tag, &players_stats).unwrap()
-        ),
-        "snd_kd" => {
-            println!(
-                "snd kd: {:?}",
-                bp::stats::get_snd_kd(args.tag.clone(), &players_stats).unwrap()
-            );
-            println!(
-                "snd kill: {:?}",
-                bp::stats::get_snd_kills(args.tag, &players_stats).unwrap()
-            );
-        }
-        "ovl_kd" => println!(
-            "ovl kd: {:?}",
-            bp::stats::get_ovl_kd(args.tag, &players_stats).unwrap()
-        ),
-        "ovl_k_10m" => println!(
-            "ovk k 10m: {:?}",
-            bp::stats::get_ovl_k_10m(args.tag, &players_stats).unwrap()
-        ),
-        _ => println!(
-            "{:?}",
-            bp::stats::print_players_stats(args.tag, &players_stats)
-        ),
+        "kd" => match bp::stats::get_stat(&args.tag, &by_tag, |j| j.kd) {
+            Some(kd) => {
+                print_header(&args.tag);
+                println!("kd: {:.2}", kd);
+            }
+            None => eprintln!("Player {} not found", args.tag),
+        },
+        "hp_kd" => match bp::stats::get_stat(&args.tag, &by_tag, |j| j.hp_kd) {
+            Some(hp_kd) => {
+                print_header(&args.tag);
+                println!("hp kd: {:.2}", hp_kd);
+            }
+            None => eprintln!("Player {} not found", args.tag),
+        },
+        "hp_k_10m" => match bp::stats::get_stat(&args.tag, &by_tag, |j| j.hp_k_10m) {
+            Some(hp_k_10m) => {
+                print_header(&args.tag);
+                println!("hp k 10m: {:.2}", hp_k_10m);
+            }
+            None => eprintln!("Player {} not found", args.tag),
+        },
+        "snd_kd" => match bp::stats::get_stat(&args.tag, &by_tag, |j| j.snd_kd) {
+            Some(snd_kd) => {
+                print_header(&args.tag);
+                println!("snd kd: {:.2}", snd_kd);
+            }
+            None => eprintln!("Player {} not found", args.tag),
+        },
+        "ovl_kd" => match bp::stats::get_stat(&args.tag, &by_tag, |j| j.ovl_kd) {
+            Some(ovl_kd) => println!("ovl kd: {:.2}", ovl_kd),
+            None => eprintln!("Player {} not found", args.tag),
+        },
+        "ovl_k_10m" => match bp::stats::get_stat(&args.tag, &by_tag, |j| j.ovl_k_10m) {
+            Some(ovl_k_10m) => {
+                print_header(&args.tag);
+                println!("ovl k 10m: {:.2}", ovl_k_10m);
+            }
+            None => eprintln!("Player {} not found", args.tag),
+        },
+        _ => match by_tag.get(args.tag.as_str()) {
+            Some(player) => println!("{}", player),
+            None => eprintln!("Player {} not found", args.tag),
+        },
     }
 }
