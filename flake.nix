@@ -1,5 +1,5 @@
 {
-  description = "Dev shell for cdl-stats with a postgres db";
+  description = "cdl-stats — CLI for getting CDL player stats from Breaking Point";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   outputs =
     { self, nixpkgs }:
@@ -8,6 +8,23 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
+      packages.${system}.default = pkgs.rustPlatform.buildRustPackage {
+        pname = "cdl-stats";
+        version = "0.1.0";
+
+        src = self;
+
+        cargoLock.lockFile = ./Cargo.lock;
+
+        nativeBuildInputs = [ pkgs.pkg-config ];
+        buildInputs = [ pkgs.openssl ];
+
+        meta = {
+          description = "Get CDL player stats from Breaking Point";
+          mainProgram = "cdl-stats";
+        };
+      };
+
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
           postgresql
